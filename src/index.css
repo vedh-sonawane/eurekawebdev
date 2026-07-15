@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --forest-deep: #142613;
+    --forest-mid: #2d5029;
+    --moss: #6b8a4f;
+    --river: #3485a3;
+    --cream: #faf4e8;
+    --stone: #727265;
+    --wood: #7a5333;
+    --gold: #c0912f;
+  }
+
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: '"DM Sans"', system-ui, sans-serif;
+    background-color: #0a160a;
+    color: #faf4e8;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgba(107, 138, 79, 0.35);
+    color: #faf4e8;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'Fraunces', Georgia, serif;
+  }
+  .font-sans {
+    font-family: '"Space Grotesk"', system-ui, sans-serif;
+  }
+  .font-body {
+    font-family: '"DM Sans"', system-ui, sans-serif;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Topographic contour background pattern */
+  .topo-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='600' height='600' viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%234a7c46' stroke-width='0.5' opacity='0.12'%3E%3Cpath d='M0 300 Q150 250 300 300 T600 300'/%3E%3Cpath d='M0 280 Q150 230 300 280 T600 280'/%3E%3Cpath d='M0 320 Q150 270 300 320 T600 320'/%3E%3Cpath d='M0 260 Q150 210 300 260 T600 260'/%3E%3Cpath d='M0 340 Q150 290 300 340 T600 340'/%3E%3Cpath d='M0 240 Q150 190 300 240 T600 240'/%3E%3Cpath d='M0 360 Q150 310 300 360 T600 360'/%3E%3Cpath d='M0 220 Q150 170 300 220 T600 220'/%3E%3Cpath d='M0 380 Q150 330 300 380 T600 380'/%3E%3Cpath d='M0 200 Q150 150 300 200 T600 200'/%3E%3Cpath d='M0 400 Q150 350 300 400 T600 400'/%3E%3Cpath d='M0 180 Q150 130 300 180 T600 180'/%3E%3Cpath d='M0 420 Q150 370 300 420 T600 420'/%3E%3Cpath d='M0 160 Q150 110 300 160 T600 160'/%3E%3Cpath d='M0 440 Q150 390 300 440 T600 440'/%3E%3Cpath d='M0 140 Q150 90 300 140 T600 140'/%3E%3Cpath d='M0 460 Q150 410 300 460 T600 460'/%3E%3Cpath d='M0 120 Q150 70 300 120 T600 120'/%3E%3Cpath d='M0 480 Q150 430 300 480 T600 480'/%3E%3Cpath d='M0 100 Q150 50 300 100 T600 100'/%3E%3Cpath d='M0 500 Q150 450 300 500 T600 500'/%3E%3Cpath d='M0 80 Q150 30 300 80 T600 80'/%3E%3Cpath d='M0 520 Q150 470 300 520 T600 520'/%3E%3Cpath d='M0 60 Q150 10 300 60 T600 60'/%3E%3Cpath d='M0 540 Q150 490 300 540 T600 540'/%3E%3Cpath d='M0 40 Q150 -10 300 40 T600 40'/%3E%3Cpath d='M0 560 Q150 510 300 560 T600 560'/%3E%3Cpath d='M0 20 Q150 -30 300 20 T600 20'/%3E%3Cpath d='M0 580 Q150 530 300 580 T600 580'/%3E%3Cpath d='M0 0 Q150 -50 300 0 T600 0'/%3E%3Cpath d='M0 600 Q150 550 300 600 T600 600'/%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  }
+
+  /* Paper / journal texture */
+  .paper-texture {
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.95 0 0 0 0 0.91 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Wood grain texture */
+  .wood-texture {
+    background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.02 0.4' numOctaves='3' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.48 0 0 0 0 0.33 0 0 0 0 0.2 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+  }
+}
+
+@layer utilities {
+  @keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes scrollRight {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 138, 79, 0.4) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(107, 138, 79, 0.4);
+    border-radius: 3px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .text-shadow-forest {
+    text-shadow: 0 2px 20px rgba(10, 22, 10, 0.6);
+  }
+
+  .glass-forest {
+    background: rgba(20, 38, 19, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(151, 184, 149, 0.15);
+  }
+
+  .glass-cream {
+    background: rgba(250, 244, 232, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(250, 244, 232, 0.12);
+  }
+}
