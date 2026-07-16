@@ -8,12 +8,6 @@ export interface SendResult {
   error?: string;
 }
 
-/**
- * "Sends" a decision email by rendering the HTML template and logging it
- * to the email_logs table. In a production app this would call an email
- * service (Resend, SendGrid, etc.) — here we persist the rendered email
- * so organizers can preview exactly what the applicant received.
- */
 export async function sendDecisionEmail(
   applicationId: string,
   name: string,
@@ -23,7 +17,6 @@ export async function sendDecisionEmail(
   try {
     const emailContent = renderDecisionEmail(name, status);
 
-    // Save to email_logs
     const { error } = await supabase.from('email_logs').insert({
       application_id: applicationId,
       recipient_email: email,
@@ -35,7 +28,6 @@ export async function sendDecisionEmail(
 
     if (error) throw error;
 
-    // Actually send the email via Vercel function
     const res = await fetch('/api/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -47,8 +39,10 @@ export async function sendDecisionEmail(
       }),
     });
 
+    const data = await res.json();
+    console.log('Email API response:', res.status, data);
+
     if (!res.ok) {
-      const data = await res.json();
       throw new Error(data.error || 'Failed to send email');
     }
 
