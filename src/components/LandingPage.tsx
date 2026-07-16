@@ -63,13 +63,23 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
 
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center px-6 pt-20">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-cream mb-8 animate-fade-in">
-            <span className="w-2 h-2 rounded-full bg-moss-400 animate-pulse-soft" />
-            <span className="font-sans text-xs text-cream-100/90 tracking-wide">
-              Applications open · Closes August 15 at 11:59 PM PT
-            </span>
-          </div>
+       <div className="max-w-5xl mx-auto text-center">
+  <div className="inline-block mb-8 animate-fade-in">
+    <span
+      className="font-sans text-xs tracking-wide text-forest-950 px-3 py-1"
+      style={{
+        background: 'linear-gradient(104deg, transparent 0%, #86a36a 2%, #a8bf90 6%, #86a36a 95%, transparent 98%)',
+        borderRadius: '2px',
+        boxShadow: '2px 2px 0px rgba(107,138,79,0.15), -1px -1px 0px rgba(107,138,79,0.1)',
+        WebkitBoxDecorationBreak: 'clone',
+        position: 'relative',
+        display: 'inline',
+        lineHeight: '1.8',
+      }}
+    >
+      Applications open · Closes August 15 at 11:59 PM PT
+    </span>
+  </div>
 
           <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold text-cream-50 leading-[1.05] text-balance text-shadow-forest animate-fade-up">
             A journey through
