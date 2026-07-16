@@ -31,7 +31,7 @@ export function ForestScene({ variant = 'river', className = '' }: ForestScenePr
   }, []);
 
   return (
-    <div ref={ref} className={`relative w-full overflow-hidden rounded-2xl ${className}`}>
+    <div ref={ref} className={`relative w-full overflow-hidden ${className}`}>
       <svg
         viewBox="0 0 1200 500"
         className="w-full h-auto"

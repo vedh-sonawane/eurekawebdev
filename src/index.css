@@ -111,3 +111,73 @@
     border: 1px solid rgba(250, 244, 232, 0.12);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Ink outlines — hand-inked field-journal boxes. No fill.
+   Append to index.css (outside any @layer, or inside @layer components).
+
+   The three --ink-* values below are space-separated RGB channels so the
+   rgb(... / alpha) syntax works. Swap them for your real palette values
+   if moss-400 / cream-50 aren't close to these.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --ink-moss: 124 166 92;
+  --ink-cream: 250 244 232;
+}
+
+/* Base ink box. Irregular corner radii = the "drawn by hand" read.
+   The ::before is a second, offset, slightly rotated line — the way you
+   never quite retrace a box the same way twice. */
+.ink {
+  position: relative;
+  background: transparent;
+  border: 1.5px solid rgb(var(--ink-moss) / 0.55);
+  border-radius: 210px 14px 240px 12px / 14px 230px 12px 220px;
+  transition: border-color 0.3s ease;
+}
+
+.ink::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border: 1px solid rgb(var(--ink-moss) / 0.16);
+  border-radius: 12px 230px 14px 220px / 240px 12px 210px 14px;
+  transform: rotate(-0.4deg);
+  pointer-events: none;
+  transition: border-color 0.3s ease;
+}
+
+.ink:hover {
+  border-color: rgb(var(--ink-moss) / 0.9);
+}
+
+.ink:hover::before {
+  border-color: rgb(var(--ink-moss) / 0.32);
+}
+
+/* Variants — so three cards side by side aren't the same box three times */
+.ink-2 {
+  border-radius: 16px 220px 12px 245px / 225px 14px 235px 12px;
+}
+.ink-2::before {
+  border-radius: 235px 12px 225px 16px / 12px 245px 14px 220px;
+  transform: rotate(0.45deg);
+}
+
+.ink-3 {
+  border-radius: 230px 16px 210px 20px / 18px 215px 16px 235px;
+}
+.ink-3::before {
+  border-radius: 18px 235px 20px 215px / 210px 20px 230px 16px;
+  transform: rotate(-0.25deg);
+}
+
+/* Speech bubble — cream ink, single line, used exactly once on the page */
+.ink-bubble {
+  border-color: rgb(var(--ink-cream) / 0.65);
+  border-radius: 220px 16px 200px 18px / 18px 210px 16px 225px;
+}
+.ink-bubble::before {
+  display: none;
+}

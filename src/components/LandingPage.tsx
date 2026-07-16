@@ -11,6 +11,9 @@ interface LandingPageProps {
   onAdminAccess: () => void;
 }
 
+/** Cycles the hand-inked box variants so no two adjacent cards match. */
+const inkVariant = (i: number) => ['', 'ink-2', 'ink-3'][i % 3];
+
 export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
   const [scrolled, setScrolled] = useState(false);
   const compassClicks = useRef(0);
@@ -150,9 +153,8 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
             final showcase beneath the canopy.
           </p>
 
-          {/* River scene with story text — this text used to be an orphaned
-              `absolute inset-0` overlay sitting on top of the cards below. */}
-          <div className="relative rounded-2xl overflow-hidden border border-forest-700/40 mt-12">
+          {/* River scene with story text */}
+          <div className="relative overflow-hidden border border-forest-700/40 mt-12">
             <ForestScene variant="river" />
             <div className="absolute inset-0 flex items-center justify-start">
               <div className="max-w-md ml-8 md:ml-16 p-6">
@@ -168,20 +170,19 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
             </div>
           </div>
 
-          {/* Journey steps */}
-          <div className="mt-16 grid md:grid-cols-3 gap-6">
+          {/* Journey steps — hand-inked boxes. The numbering earns its keep here:
+              this is an actual sequence, trailhead → expedition → showcase. */}
+          <div className="mt-20 grid md:grid-cols-3 gap-8">
             {[
               { icon: MapPin, title: 'Trailhead', desc: 'Your application is the trailhead. Tell us who you are, what you\'ve built, and why you\'re ready to explore.', step: '01' },
               { icon: Sparkles, title: 'The Expedition', desc: '36 hours of building alongside 500 explorers. Workshops, mentors, hardware, and a forest full of surprises await.', step: '02' },
               { icon: Waves, title: 'Eureka', desc: 'The showcase. Present your project to judges, sponsors, and the community. Every project leaves a mark on the trail.', step: '03' },
-            ].map((card) => (
-              <div key={card.step} className="group relative p-8 rounded-2xl glass-cream hover:border-moss-400/30 transition-all duration-300">
-                <span className="absolute top-6 right-6 font-display text-5xl font-semibold text-forest-700/40 group-hover:text-moss-500/30 transition-colors">
+            ].map((card, i) => (
+              <div key={card.step} className={`group relative p-8 ink ${inkVariant(i)}`}>
+                <span className="absolute top-6 right-7 font-display text-5xl font-semibold text-forest-700/40 group-hover:text-moss-500/40 transition-colors">
                   {card.step}
                 </span>
-                <div className="w-12 h-12 rounded-xl bg-moss-500/15 border border-moss-400/20 flex items-center justify-center mb-5">
-                  <card.icon className="text-moss-300" size={22} />
-                </div>
+                <card.icon className="text-moss-300 mb-5" size={24} strokeWidth={1.8} />
                 <h3 className="font-display text-2xl font-semibold text-cream-50 mb-3">{card.title}</h3>
                 <p className="font-body text-cream-100/65 leading-relaxed">{card.desc}</p>
               </div>
@@ -194,7 +195,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
       <section id="expeditions" className="relative py-32 px-6">
         <div className="max-w-6xl mx-auto">
           {/* Canopy scene with story text */}
-          <div className="relative rounded-2xl overflow-hidden border border-forest-700/40 mb-16">
+          <div className="relative overflow-hidden border border-forest-700/40 mb-16">
             <ForestScene variant="canopy" />
             <div className="absolute inset-0 flex items-center justify-end">
               <div className="max-w-md mr-8 md:mr-16 p-6">
@@ -215,24 +216,24 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
             Built for those who think differently
           </h2>
 
-          <div className="mt-12 grid md:grid-cols-2 gap-8">
-            <div className="space-y-4">
+          <div className="mt-12 grid md:grid-cols-2 gap-12">
+            {/* Packing list — hairline rules, no boxes */}
+            <div className="border-y border-forest-700/30 divide-y divide-forest-700/30">
               {[
                 { icon: Tent, text: 'Travel reimbursements and lodging for explorers coming from afar' },
                 { icon: Code2, text: 'A hardware lab stocked with microcontrollers, sensors, and trail gear' },
                 { icon: Zap, text: 'Workshops led by industry trailblazers — from AI to embedded systems' },
                 { icon: TreePine, text: 'Quiet forest zones for deep work, loud clearings for collaboration' },
               ].map((item) => (
-                <div key={item.text} className="flex items-start gap-3 p-4 rounded-xl bg-forest-900/30 border border-forest-700/30">
-                  <div className="w-9 h-9 rounded-lg bg-moss-500/15 border border-moss-400/20 flex items-center justify-center shrink-0">
-                    <item.icon className="text-moss-300" size={16} />
-                  </div>
-                  <span className="font-body text-cream-100/75 leading-relaxed pt-1.5">{item.text}</span>
+                <div key={item.text} className="flex items-start gap-4 py-5">
+                  <item.icon className="text-moss-300 shrink-0 mt-1" size={18} strokeWidth={1.8} />
+                  <span className="font-body text-cream-100/75 leading-relaxed">{item.text}</span>
                 </div>
               ))}
             </div>
+
             <div className="relative">
-              <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-forest-700/50 shadow-2xl shadow-forest-950/50">
+              <div className="aspect-[4/5] overflow-hidden border border-forest-700/50 shadow-2xl shadow-forest-950/50">
                 <img
                   src="https://images.pexels.com/photos/12716193/pexels-photo-12716193.jpeg?auto=compress&cs=tinysrgb&w=800"
                   alt="Forest river expedition"
@@ -240,11 +241,31 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
                   loading="lazy"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 p-5 rounded-xl glass-forest max-w-[220px]">
+
+              {/* The one playful moment on the page: an actual speech bubble,
+                  ink outline + hand-drawn tail. It's opaque because it sits on
+                  a photograph and the type has to stay readable. */}
+              <div className="absolute -bottom-8 -left-6 max-w-[240px] p-5 ink ink-bubble bg-forest-950/85 backdrop-blur-sm">
                 <p className="font-display text-sm text-cream-50 italic leading-relaxed">
                   "The forest teaches you to see what was always there."
                 </p>
                 <p className="mt-2 font-sans text-xs text-stone-400">— Expedition field notes</p>
+                <svg
+                  className="absolute -bottom-[17px] left-10"
+                  width="32"
+                  height="20"
+                  viewBox="0 0 32 20"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M1 1C4.5 8 9 14 22 18.5C15 13 10 7.5 7.5 1"
+                    stroke="#faf4e8"
+                    strokeOpacity="0.65"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </div>
             </div>
           </div>
@@ -255,7 +276,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
       <section id="community" className="relative py-32 px-6">
         <div className="max-w-6xl mx-auto">
           {/* Clearing scene with campfire */}
-          <div className="relative rounded-2xl overflow-hidden border border-forest-700/40 mb-16">
+          <div className="relative overflow-hidden border border-forest-700/40 mb-16">
             <ForestScene variant="clearing" />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="max-w-lg text-center p-6">
@@ -275,16 +296,15 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
             Find your crew. Make lasting memories.
           </h2>
 
-          <div className="mt-16 grid md:grid-cols-3 gap-6">
+          {/* Columns divided by hairlines — no cards */}
+          <div className="mt-16 grid md:grid-cols-3 border-t border-forest-700/40 md:divide-x md:divide-forest-700/40">
             {[
               { icon: Users, title: 'Find your crew', desc: 'Teams of up to 4. Pair with hackers from any school, any background, any experience level. Solo? We\'ll help you find your trail mates.' },
               { icon: Heart, title: 'Make lasting memories', desc: 'Trail mix cooking challenges, stargazing breaks, and a midnight canoe relay. Because the best ideas come when you\'re recharged.' },
               { icon: Trophy, title: 'Win prizes', desc: '$30K in prizes across categories including Best in Forest, Most Adventurous Hardware, and the Eureka Award for boldest idea.' },
             ].map((c) => (
-              <div key={c.title} className="p-7 rounded-xl border border-forest-700/40 bg-forest-900/30 hover:bg-forest-900/50 transition-colors">
-                <div className="w-10 h-10 rounded-lg bg-moss-500/15 border border-moss-400/20 flex items-center justify-center mb-4">
-                  <c.icon className="text-moss-300" size={18} />
-                </div>
+              <div key={c.title} className="py-8 border-b border-forest-700/40 md:border-b-0 md:px-8 md:first:pl-0 md:last:pr-0">
+                <c.icon className="text-moss-300 mb-4" size={20} strokeWidth={1.8} />
                 <h3 className="font-display text-xl font-semibold text-cream-50 mb-3">{c.title}</h3>
                 <p className="font-body text-cream-100/65 leading-relaxed text-sm">{c.desc}</p>
               </div>
@@ -305,19 +325,19 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
             EurekaHACKS expeditions — and the stories behind them.
           </p>
 
-          <div className="mt-16 grid md:grid-cols-2 gap-6">
+          <div className="mt-16 grid md:grid-cols-2 gap-8">
             {[
               { name: 'Canopy', team: 'Team Mossback', desc: 'A real-time forest canopy analysis tool using drone imagery and satellite data to track biodiversity health across protected woodlands.', tag: 'AI · Computer Vision', img: 'https://images.pexels.com/photos/1671324/pexels-photo-1671324.jpeg?auto=compress&cs=tinysrgb&w=600' },
               { name: 'Riverline', team: 'Team Current', desc: 'A decentralized water-quality monitoring network built on low-cost ESP32 sensors, streaming live data to a public dashboard.', tag: 'IoT · Hardware', img: 'https://images.pexels.com/photos/2406735/pexels-photo-2406735.jpeg?auto=compress&cs=tinysrgb&w=600' },
             ].map((p) => (
-              <div key={p.name} className="group rounded-2xl overflow-hidden border border-forest-700/40 bg-forest-900/30 hover:border-moss-400/30 transition-all">
-                <div className="aspect-[16/9] overflow-hidden">
+              <div key={p.name} className="group">
+                <div className="aspect-[16/9] overflow-hidden border border-forest-700/40 group-hover:border-moss-400/40 transition-colors">
                   <img src={p.img} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                 </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
+                <div className="pt-5">
+                  <div className="flex items-baseline justify-between gap-4 mb-2">
                     <h3 className="font-display text-2xl font-semibold text-cream-50">{p.name}</h3>
-                    <span className="px-2.5 py-1 rounded-full bg-river-500/15 text-river-300 text-xs font-sans border border-river-500/20">{p.tag}</span>
+                    <span className="font-sans text-[11px] uppercase tracking-[0.18em] text-river-300 shrink-0">{p.tag}</span>
                   </div>
                   <p className="font-sans text-sm text-stone-400 mb-3">{p.team}</p>
                   <p className="font-body text-cream-100/65 leading-relaxed">{p.desc}</p>
@@ -337,7 +357,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
       {/* Dusk scene — closing story moment */}
       <section className="relative py-32 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="relative rounded-2xl overflow-hidden border border-forest-700/40">
+          <div className="relative overflow-hidden border border-forest-700/40">
             <ForestScene variant="dusk" />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="max-w-lg text-center p-6">
@@ -355,7 +375,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* FAQ — a list, not a stack of cards */}
       <section id="faq" className="relative py-32 px-6">
         <div className="max-w-3xl mx-auto">
           <SectionLabel icon={Sparkles} text="Questions" />
@@ -363,7 +383,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
             Frequently asked questions
           </h2>
 
-          <div className="mt-12 space-y-3">
+          <div className="mt-12 border-t border-forest-800/60">
             {FAQS.map((faq, i) => (
               <FAQItem key={i} {...faq} />
             ))}
@@ -438,17 +458,17 @@ const FAQS = [
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-xl border border-forest-700/40 bg-forest-900/30 overflow-hidden">
+    <div className="border-b border-forest-800/60">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-6 py-5 text-left"
+        className="group w-full flex items-center justify-between gap-6 py-5 text-left"
       >
-        <span className="font-sans text-base font-medium text-cream-50">{q}</span>
+        <span className="font-sans text-base font-medium text-cream-50 group-hover:text-moss-200 transition-colors">{q}</span>
         <ChevronDown size={18} className={`text-stone-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       <div className={`grid transition-all duration-300 ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
         <div className="overflow-hidden">
-          <p className="px-6 pb-5 font-body text-cream-100/65 leading-relaxed">{a}</p>
+          <p className="pb-5 pr-10 font-body text-cream-100/65 leading-relaxed">{a}</p>
         </div>
       </div>
     </div>
