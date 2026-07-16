@@ -1,4 +1,4 @@
-/* This is a single or multi-line comment inside TSX markup */
+/* This is a single or multi-line comment inside TSX markup! */
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
