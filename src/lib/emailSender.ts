@@ -8,6 +8,12 @@ export interface SendResult {
   error?: string;
 }
 
+/**
+ * "Sends" a decision email by rendering the HTML template and logging it
+ * to the email_logs table. In a production app this would call an email
+ * service (Resend, SendGrid, etc.) — here we persist the rendered email
+ * so organizers can preview exactly what the applicant received.
+ */
 export async function sendDecisionEmail(
   applicationId: string,
   name: string,
@@ -48,6 +54,9 @@ export async function sendDecisionEmail(
 
     return { success: true, email: emailContent };
   } catch (err) {
-    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Unknown error',
+    };
   }
 }
