@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from 'react';
-import { ForestEnvironment } from './components/ForestEnvironment';
 import { LandingPage } from './components/LandingPage';
 import { ApplicationForm } from './components/ApplicationForm';
 import { AdminAccess } from './components/admin/AdminAccess';
@@ -29,12 +28,8 @@ export default function App() {
     window.location.hash = hash;
   }, []);
 
-  const isAdmin = route === 'admin-access' || route === 'admin-dashboard';
-
   return (
     <div className="relative min-h-screen">
-      <ForestEnvironment variant={isAdmin ? 'admin' : 'applicant'} />
-
       {route === 'home' && <LandingPage onApply={() => navigate('/apply')} onAdminAccess={() => navigate('/admin')} />}
       {route === 'apply' && <ApplicationForm onBack={() => navigate('')} />}
       {route === 'admin-access' && (
