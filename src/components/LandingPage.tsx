@@ -147,7 +147,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
           </p>
 
           {/* Animated river scene with story overlay */}
-          <div className="mt-16 relative rounded-2xl overflow-hidden border border-forest-700/40">
+          <div className="mt-8 relative rounded-2xl overflow-hidden border border-forest-700/40">
             <ForestScene variant="river" />
             <div className="absolute inset-0 flex items-center">
               <div className="max-w-md ml-8 md:ml-16 p-6">
