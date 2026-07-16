@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { ArrowRight, MapPin, Calendar, Users, Compass, Code2, Sparkles, TreePine, Waves, Mail, ChevronDown, Star, Heart, Zap, Trophy, Tent } from 'lucide-react';
 import { Button } from './ui/Button';
 import { ForestScene } from './ForestScene';
+import { WaterfallScene } from './ForestEnvironment';
 import { MentorsSection } from './MentorsSection';
 import { ExecSection } from './ExecSection';
 
@@ -61,32 +62,35 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 pt-20">
-       <div className="max-w-5xl mx-auto text-center">
-  <div className="inline-block mb-8 animate-fade-in">
-    <span
-      className="font-sans text-xs tracking-wide px-4 py-2"
-      style={{
-        background: 'linear-gradient(180deg, #8B5E3C 0%, #6B4423 30%, #7a5333 50%, #5C3A1E 51%, #6B4423 70%, #7a5333 100%)',
-        borderRadius: '4px',
-        border: '1px solid #4a2e10',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.3), 2px 3px 8px rgba(0,0,0,0.4), -1px -1px 4px rgba(0,0,0,0.2)',
-        color: '#faf4e8',
-        display: 'inline-block',
-        backgroundImage: `
-          linear-gradient(180deg, #8B5E3C 0%, #6B4423 30%, #7a5333 50%, #5C3A1E 51%, #6B4423 70%, #7a5333 100%),
-          repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px),
-          repeating-linear-gradient(180deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 8px)
-        `,
-        textShadow: '0 1px 2px rgba(0,0,0,0.5)',
-        letterSpacing: '0.08em',
-        position: 'relative',
-      }}
-    >
-      Applications open · Closes August 15 at 11:59 PM PT
-    </span>
-  </div>
+      {/* Hero — the waterfall lives here and ONLY here.
+          overflow-hidden clips it to this section; the content sits above it on z-10. */}
+      <section className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
+        <WaterfallScene waterline={0.64} reach={0.72} />
+
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
+          <div className="inline-block mb-8 animate-fade-in">
+            <span
+              className="font-sans text-xs tracking-wide px-4 py-2"
+              style={{
+                background: 'linear-gradient(180deg, #8B5E3C 0%, #6B4423 30%, #7a5333 50%, #5C3A1E 51%, #6B4423 70%, #7a5333 100%)',
+                borderRadius: '4px',
+                border: '1px solid #4a2e10',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.3), 2px 3px 8px rgba(0,0,0,0.4), -1px -1px 4px rgba(0,0,0,0.2)',
+                color: '#faf4e8',
+                display: 'inline-block',
+                backgroundImage: `
+                  linear-gradient(180deg, #8B5E3C 0%, #6B4423 30%, #7a5333 50%, #5C3A1E 51%, #6B4423 70%, #7a5333 100%),
+                  repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px),
+                  repeating-linear-gradient(180deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 8px)
+                `,
+                textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                letterSpacing: '0.08em',
+                position: 'relative',
+              }}
+            >
+              Applications open · Closes August 15 at 11:59 PM PT
+            </span>
+          </div>
 
           <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold text-cream-50 leading-[1.05] text-balance text-shadow-forest animate-fade-up">
             A journey through
@@ -128,7 +132,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-pulse-soft">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-pulse-soft">
           <ChevronDown className="text-cream-100/40" size={28} />
         </div>
       </section>
@@ -146,16 +150,21 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
             final showcase beneath the canopy.
           </p>
 
-                    <div className="absolute inset-0 flex items-start pt-12">
-            <div className="max-w-md ml-8 md:ml-16 p-6">
-              <p className="font-display text-2xl md:text-3xl font-semibold text-cream-50 leading-tight text-shadow-forest">
-                The river carries you forward.
-              </p>
-              <p className="mt-3 font-body text-cream-100/80 leading-relaxed">
-                From the moment you apply, you're following a current — one that leads
-                through workshops, mentorship, and 36 hours of building toward something
-                you've never made before.
-              </p>
+          {/* River scene with story text — this text used to be an orphaned
+              `absolute inset-0` overlay sitting on top of the cards below. */}
+          <div className="relative rounded-2xl overflow-hidden border border-forest-700/40 mt-12">
+            <ForestScene variant="river" />
+            <div className="absolute inset-0 flex items-center justify-start">
+              <div className="max-w-md ml-8 md:ml-16 p-6">
+                <p className="font-display text-2xl md:text-3xl font-semibold text-cream-50 leading-tight text-shadow-forest">
+                  The river carries you forward.
+                </p>
+                <p className="mt-3 font-body text-cream-100/80 leading-relaxed">
+                  From the moment you apply, you're following a current — one that leads
+                  through workshops, mentorship, and 36 hours of building toward something
+                  you've never made before.
+                </p>
+              </div>
             </div>
           </div>
 
