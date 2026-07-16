@@ -55,7 +55,7 @@ export function ExecSection() {
         </h2>
         <p className="mt-6 font-body text-lg text-cream-100/70 max-w-2xl leading-relaxed">
           EurekaHACKS is put on by builders for builders. Our team of 30 organizers
-          spans every discipline — engineering, design, logistics, community —
+          spans every discipline. Engineering, design, logistics, community. All
           united by one belief: that the best ideas emerge when you step into the unknown.
         </p>
       </div>

@@ -33,7 +33,7 @@ export function MentorsSection() {
         </h2>
         <p className="mt-6 font-body text-lg text-cream-100/70 max-w-2xl leading-relaxed">
           Our mentors come from the companies and labs shaping what's next in tech.
-          They'll guide you through the wilderness — from your first line of code to your final demo.
+          They'll guide you through the wilderness: from your first line of code to your final demo.
         </p>
 
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-5">

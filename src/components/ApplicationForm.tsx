@@ -168,7 +168,7 @@ export function ApplicationForm({ onBack }: ApplicationFormProps) {
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch {
-      setSubmitError('Something went wrong submitting your application. Your draft is saved — please try again.');
+      setSubmitError('Something went wrong submitting your application. Your draft is saved. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -259,7 +259,7 @@ export function ApplicationForm({ onBack }: ApplicationFormProps) {
               <Input
                 name="location"
                 label="Location"
-                hint="City, Province/State — helps us plan travel support."
+                hint="City, Province/State: helps us plan travel support."
                 value={data.location || ''}
                 onChange={(e) => set('location', e.target.value)}
                 error={errors.location}
@@ -288,7 +288,7 @@ export function ApplicationForm({ onBack }: ApplicationFormProps) {
                 rows={3}
                 value={data.previous_hackathons || ''}
                 onChange={(e) => set('previous_hackathons', e.target.value)}
-                placeholder="Hack the North 2025 — built a real-time forest monitoring app…"
+                placeholder="Hack the North 2025. Built a real-time forest monitoring app…"
               />
               <Input
                 name="technologies"
@@ -311,7 +311,7 @@ export function ApplicationForm({ onBack }: ApplicationFormProps) {
                 value={data.best_project || ''}
                 onChange={(e) => set('best_project', e.target.value)}
                 error={errors.best_project}
-                placeholder="Canopy — drone-based forest canopy analyzer"
+                placeholder="Canopy, which is a drone-based forest canopy analyzer"
               />
               <Textarea
                 name="project_description"
@@ -359,7 +359,7 @@ export function ApplicationForm({ onBack }: ApplicationFormProps) {
               <Textarea
                 name="contribution"
                 label="What can you contribute to the community?"
-                hint="Skills, perspectives, energy, experience — what do you bring to the trail?"
+                hint="Skills, perspectives, energy, experience: what do you bring to the trail?"
                 rows={4}
                 value={data.contribution || ''}
                 onChange={(e) => set('contribution', e.target.value)}

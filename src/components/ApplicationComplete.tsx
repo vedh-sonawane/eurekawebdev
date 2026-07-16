@@ -54,7 +54,7 @@ export function ApplicationComplete({ onBack }: ApplicationCompleteProps) {
 
           <p className="mt-8 font-body text-lg text-cream-100/70 max-w-xl mx-auto leading-relaxed text-balance">
             Thank you for taking the first step. Our expedition team will review your application
-            carefully, and you'll hear back within two weeks. Keep an eye on your inbox —
+            carefully, and you'll hear back within two weeks. Keep an eye on your inbox:
             the trail ahead is full of possibility.
           </p>
 
@@ -65,7 +65,7 @@ export function ApplicationComplete({ onBack }: ApplicationCompleteProps) {
                 'We review your application within 2 weeks',
                 'You\'ll receive an email with our decision',
                 'If accepted, you\'ll get travel and lodging details',
-                'Pack your gear — the expedition awaits',
+                'Pack your gear. The expedition awaits.',
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <span className="mt-0.5 w-5 h-5 rounded-full bg-moss-500/20 border border-moss-400/30 flex items-center justify-center text-xs font-sans text-moss-300 shrink-0">
