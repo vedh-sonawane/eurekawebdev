@@ -1,196 +1,362 @@
-import { useEffect, useRef, type CSSProperties } from 'react';
+import { useEffect, useRef } from 'react';
 
-/**
- * Living forest-river environment.
- * Layered: deep gradient sky, distant treeline silhouettes, drifting fog,
- * slow sunlight rays, floating particles (fireflies), topographic contour lines.
- * Parallax reacts to scroll and pointer for depth.
- */
-export function ForestEnvironment({ variant = 'applicant' }: { variant?: 'applicant' | 'admin' }) {
-  const containerRef = useRef<HTMLDivElement>(null);
+export function WaterfallScene() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const y = window.scrollY;
-        container.style.setProperty('--scroll', `${y}`);
+    let animFrame: number;
+    let t = 0;
+
+    // Resize handler
+    const resize = () => {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // --- Waterfall particles ---
+    type Particle = { x: number; y: number; vy: number; vx: number; alpha: number; r: number; isMist: boolean };
+    const particles: Particle[] = [];
+
+    const spawnParticle = (W: number) => {
+      const fallX = W * 0.04 + Math.random() * W * 0.09;
+      particles.push({
+        x: fallX,
+        y: 0,
+        vy: 4 + Math.random() * 3,
+        vx: (Math.random() - 0.5) * 0.6,
+        alpha: 0.55 + Math.random() * 0.35,
+        r: 1 + Math.random() * 2.5,
+        isMist: false,
       });
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
+
+    const spawnMist = (W: number, H: number) => {
+      const poolY = H * 0.72;
+      const fallX = W * 0.04 + Math.random() * W * 0.09;
+      particles.push({
+        x: fallX + (Math.random() - 0.5) * W * 0.12,
+        y: poolY,
+        vy: -(0.3 + Math.random() * 1.2),
+        vx: (Math.random() - 0.5) * 1.5,
+        alpha: 0.18 + Math.random() * 0.22,
+        r: 3 + Math.random() * 7,
+        isMist: true,
+      });
+    };
+
+    // --- Duck state ---
+    let duckX = 0;
+    let duckDir = 1;
+    let duckBob = 0;
+
+    const draw = () => {
+      const W = canvas.offsetWidth;
+      const H = canvas.offsetHeight;
+      t += 1;
+
+      ctx.clearRect(0, 0, W, H);
+
+      const cliffTop = H * 0.08;
+      const cliffBot = H * 0.72;
+      const fallLeft = W * 0.03;
+      const fallRight = W * 0.14;
+      const fallMid = (fallLeft + fallRight) / 2;
+
+      // Initialize duck position
+      if (duckX === 0) duckX = fallRight + W * 0.06;
+
+      // --- Rocky cliff face ---
+      ctx.save();
+      const cliffGrad = ctx.createLinearGradient(fallLeft, cliffTop, fallRight + W * 0.04, cliffBot);
+      cliffGrad.addColorStop(0, '#3d3028');
+      cliffGrad.addColorStop(0.3, '#2e2318');
+      cliffGrad.addColorStop(0.7, '#4a3a28');
+      cliffGrad.addColorStop(1, '#1a1208');
+      ctx.fillStyle = cliffGrad;
+      ctx.beginPath();
+      ctx.moveTo(fallLeft - W * 0.01, 0);
+      ctx.lineTo(fallRight + W * 0.04, 0);
+      ctx.lineTo(fallRight + W * 0.02, cliffBot * 0.4);
+      ctx.lineTo(fallRight - W * 0.01, cliffBot * 0.75);
+      ctx.lineTo(fallLeft - W * 0.02, cliffBot * 0.8);
+      ctx.lineTo(fallLeft - W * 0.03, 0);
+      ctx.closePath();
+      ctx.fill();
+
+      // Rock texture lines
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < 8; i++) {
+        const rx = fallLeft + (i / 8) * (fallRight - fallLeft);
+        ctx.beginPath();
+        ctx.moveTo(rx, cliffTop + i * 12);
+        ctx.lineTo(rx + (Math.random() > 0.5 ? 4 : -4), cliffBot * 0.6 + i * 8);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // --- Waterfall stream ---
+      // Main water body
+      const waterGrad = ctx.createLinearGradient(fallLeft, cliffTop, fallRight, cliffBot);
+      waterGrad.addColorStop(0, 'rgba(200,235,255,0.90)');
+      waterGrad.addColorStop(0.2, 'rgba(160,210,240,0.80)');
+      waterGrad.addColorStop(0.5, 'rgba(120,185,225,0.75)');
+      waterGrad.addColorStop(0.8, 'rgba(100,170,215,0.80)');
+      waterGrad.addColorStop(1, 'rgba(180,225,250,0.85)');
+
+      ctx.save();
+      ctx.fillStyle = waterGrad;
+      const waveOffset = Math.sin(t * 0.04) * 2;
+      ctx.beginPath();
+      ctx.moveTo(fallLeft + waveOffset, cliffTop);
+      ctx.bezierCurveTo(
+        fallLeft - 2 + waveOffset, cliffTop + (cliffBot - cliffTop) * 0.3,
+        fallLeft + 3 + waveOffset, cliffTop + (cliffBot - cliffTop) * 0.6,
+        fallLeft - 1 + waveOffset, cliffBot
+      );
+      ctx.lineTo(fallRight - 1 - waveOffset, cliffBot);
+      ctx.bezierCurveTo(
+        fallRight + 2 - waveOffset, cliffTop + (cliffBot - cliffTop) * 0.6,
+        fallRight - 3 - waveOffset, cliffTop + (cliffBot - cliffTop) * 0.3,
+        fallRight - waveOffset, cliffTop
+      );
+      ctx.closePath();
+      ctx.fill();
+
+      // Water shimmer streaks
+      for (let i = 0; i < 6; i++) {
+        const sx = fallLeft + (i / 6) * (fallRight - fallLeft) + Math.sin(t * 0.05 + i) * 1.5;
+        const shimmerAlpha = 0.3 + 0.4 * Math.abs(Math.sin(t * 0.07 + i * 1.3));
+        ctx.strokeStyle = `rgba(230,250,255,${shimmerAlpha})`;
+        ctx.lineWidth = 0.8 + Math.sin(t * 0.03 + i) * 0.4;
+        ctx.beginPath();
+        ctx.moveTo(sx, cliffTop + 10);
+        ctx.bezierCurveTo(
+          sx + Math.sin(t * 0.05 + i) * 3, cliffTop + (cliffBot - cliffTop) * 0.35,
+          sx - Math.sin(t * 0.06 + i) * 2, cliffTop + (cliffBot - cliffTop) * 0.65,
+          sx + Math.sin(t * 0.04 + i) * 2, cliffBot - 5
+        );
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // --- Pool at base ---
+      const poolH = H * 0.28;
+      const poolGrad = ctx.createLinearGradient(0, cliffBot, 0, cliffBot + poolH);
+      poolGrad.addColorStop(0, 'rgba(60,140,180,0.70)');
+      poolGrad.addColorStop(0.3, 'rgba(40,110,155,0.60)');
+      poolGrad.addColorStop(0.7, 'rgba(30,90,130,0.55)');
+      poolGrad.addColorStop(1, 'rgba(20,70,110,0.40)');
+
+      ctx.save();
+      ctx.fillStyle = poolGrad;
+      ctx.beginPath();
+      ctx.moveTo(0, cliffBot);
+      ctx.lineTo(W, cliffBot);
+      ctx.lineTo(W, cliffBot + poolH);
+      ctx.lineTo(0, cliffBot + poolH);
+      ctx.closePath();
+      ctx.fill();
+
+      // Pool ripples from waterfall impact
+      const impactX = fallMid;
+      const impactY = cliffBot + 8;
+      for (let r = 0; r < 5; r++) {
+        const phase = ((t * 0.04 + r * 0.4) % 1);
+        const radius = phase * W * 0.12;
+        const alpha = (1 - phase) * 0.35;
+        ctx.strokeStyle = `rgba(180,230,255,${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(impactX, impactY + radius * 0.3, radius, radius * 0.35, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Pool surface shimmer
+      for (let i = 0; i < 12; i++) {
+        const sx = W * 0.15 + (i / 12) * W * 0.8;
+        const sy = cliffBot + 20 + Math.sin(t * 0.03 + i * 0.7) * 6;
+        const sw = 8 + Math.sin(t * 0.05 + i) * 4;
+        const salpha = 0.15 + 0.2 * Math.abs(Math.sin(t * 0.06 + i));
+        ctx.strokeStyle = `rgba(200,240,255,${salpha})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(sx - sw / 2, sy);
+        ctx.quadraticCurveTo(sx, sy - 2, sx + sw / 2, sy);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // --- Water particles ---
+      if (t % 2 === 0) spawnParticle(W);
+      if (t % 4 === 0) spawnMist(W, H);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.isMist) {
+          p.vy *= 0.98;
+          p.vx *= 0.97;
+          p.alpha *= 0.985;
+          if (p.alpha < 0.01) { particles.splice(i, 1); continue; }
+          ctx.fillStyle = `rgba(200,235,255,${p.alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          if (p.y > cliffBot + 15) { particles.splice(i, 1); continue; }
+          ctx.fillStyle = `rgba(220,245,255,${p.alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // --- Duck ---
+      duckBob = Math.sin(t * 0.045) * 4;
+      const waterSurface = cliffBot + 18 + duckBob;
+
+      // Duck slow swim
+      duckX += duckDir * 0.18;
+      const duckMinX = fallRight + W * 0.05;
+      const duckMaxX = W * 0.72;
+      if (duckX > duckMaxX) duckDir = -1;
+      if (duckX < duckMinX) duckDir = 1;
+
+      const duckScale = W * 0.0008;
+      const ds = Math.max(0.7, duckScale);
+
+      ctx.save();
+      ctx.translate(duckX, waterSurface);
+      if (duckDir < 0) ctx.scale(-1, 1);
+
+      // Body shadow/reflection
+      ctx.fillStyle = 'rgba(20,60,90,0.18)';
+      ctx.beginPath();
+      ctx.ellipse(0, 14 * ds, 28 * ds, 6 * ds, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Body
+      const bodyGrad = ctx.createRadialGradient(-4 * ds, -4 * ds, 2 * ds, 0, 0, 28 * ds);
+      bodyGrad.addColorStop(0, '#f5f0e0');
+      bodyGrad.addColorStop(0.4, '#e8e0c8');
+      bodyGrad.addColorStop(0.8, '#c8bc98');
+      bodyGrad.addColorStop(1, '#a89870');
+      ctx.fillStyle = bodyGrad;
+      ctx.beginPath();
+      ctx.ellipse(0, 2 * ds, 26 * ds, 14 * ds, -0.1, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Wing detail
+      ctx.strokeStyle = 'rgba(160,145,110,0.6)';
+      ctx.lineWidth = 0.8 * ds;
+      ctx.beginPath();
+      ctx.moveTo(-8 * ds, -2 * ds);
+      ctx.bezierCurveTo(2 * ds, 4 * ds, 12 * ds, 6 * ds, 18 * ds, 2 * ds);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-4 * ds, 0 * ds);
+      ctx.bezierCurveTo(6 * ds, 6 * ds, 14 * ds, 7 * ds, 20 * ds, 4 * ds);
+      ctx.stroke();
+
+      // Tail feathers
+      ctx.fillStyle = '#d4c89a';
+      ctx.beginPath();
+      ctx.moveTo(-20 * ds, -2 * ds);
+      ctx.bezierCurveTo(-28 * ds, -8 * ds, -30 * ds, -2 * ds, -26 * ds, 4 * ds);
+      ctx.bezierCurveTo(-24 * ds, 8 * ds, -18 * ds, 6 * ds, -16 * ds, 2 * ds);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(150,135,95,0.5)';
+      ctx.lineWidth = 0.5 * ds;
+      ctx.stroke();
+
+      // Neck
+      ctx.fillStyle = '#b8a870';
+      ctx.beginPath();
+      ctx.ellipse(16 * ds, -8 * ds, 7 * ds, 9 * ds, 0.3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Head - mallard green
+      const headGrad = ctx.createRadialGradient(18 * ds, -16 * ds, 1 * ds, 18 * ds, -16 * ds, 9 * ds);
+      headGrad.addColorStop(0, '#4a9060');
+      headGrad.addColorStop(0.5, '#2d7040');
+      headGrad.addColorStop(1, '#1a5028');
+      ctx.fillStyle = headGrad;
+      ctx.beginPath();
+      ctx.arc(18 * ds, -17 * ds, 9 * ds, 0, Math.PI * 2);
+      ctx.fill();
+
+      // White neck ring
+      ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+      ctx.lineWidth = 2.5 * ds;
+      ctx.beginPath();
+      ctx.ellipse(16 * ds, -8 * ds, 6 * ds, 3 * ds, 0.3, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Bill
+      ctx.fillStyle = '#e8a830';
+      ctx.strokeStyle = '#c48820';
+      ctx.lineWidth = 0.5 * ds;
+      ctx.beginPath();
+      ctx.moveTo(25 * ds, -17 * ds);
+      ctx.bezierCurveTo(32 * ds, -17 * ds, 34 * ds, -15 * ds, 32 * ds, -13 * ds);
+      ctx.bezierCurveTo(30 * ds, -11 * ds, 25 * ds, -13 * ds, 25 * ds, -15 * ds);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Nostril
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.beginPath();
+      ctx.ellipse(28 * ds, -15.5 * ds, 1.5 * ds, 0.8 * ds, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Eye
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.arc(21 * ds, -19 * ds, 2 * ds, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.beginPath();
+      ctx.arc(21.8 * ds, -19.8 * ds, 0.7 * ds, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Water line ripple around duck
+      ctx.strokeStyle = 'rgba(180,225,250,0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.ellipse(0, 10 * ds, 32 * ds, 5 * ds, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.restore();
+
+      animFrame = requestAnimationFrame(draw);
+    };
+
+    draw();
+
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(animFrame);
+      window.removeEventListener('resize', resize);
     };
   }, []);
 
-  const admin = variant === 'admin';
-
   return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 -z-10 overflow-hidden"
-      style={{ '--scroll': '0' } as CSSProperties}
+    <canvas
+      ref={canvasRef}
+      className="absolute left-0 top-0 w-[22%] h-full"
+      style={{ pointerEvents: 'none', zIndex: 0 }}
       aria-hidden="true"
-    >
-      {/* Base gradient — deep forest to river dusk */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: admin
-            ? 'linear-gradient(170deg, #0a160a 0%, #142613 35%, #1f3a1d 70%, #2d5029 100%)'
-            : 'linear-gradient(165deg, #0a160a 0%, #142613 25%, #1f3a1d 55%, #2a6b89 100%)',
-        }}
-      />
-
-      {/* Topographic contour lines */}
-      <div className="absolute inset-0 topo-pattern opacity-40" />
-
-      {/* Sunlight rays through canopy */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute -top-20 left-1/4 w-[140%] h-[120%] opacity-30"
-          style={{
-            background:
-              'conic-gradient(from 200deg at 35% 0%, transparent 0deg, rgba(212,168,67,0.08) 12deg, transparent 24deg, rgba(212,168,67,0.06) 40deg, transparent 52deg, rgba(212,168,67,0.05) 70deg, transparent 90deg)',
-            filter: 'blur(20px)',
-          }}
-        />
-        <div
-          className="absolute -top-10 right-1/4 w-[100%] h-[100%] opacity-20 animate-fog"
-          style={{
-            background:
-              'conic-gradient(from 340deg at 70% 0%, transparent 0deg, rgba(212,168,67,0.06) 8deg, transparent 16deg, rgba(212,168,67,0.04) 30deg, transparent 44deg)',
-            filter: 'blur(30px)',
-          }}
-        />
-      </div>
-
-      {/* Distant treeline — far layer */}
-      <svg
-        className="absolute bottom-0 left-0 w-full opacity-20"
-        style={{ height: '45%', transform: 'translateY(calc(var(--scroll) * 0.05px))' }}
-        viewBox="0 0 1440 400"
-        preserveAspectRatio="none"
-        fill="none"
-      >
-        <path
-          d="M0 400 L0 280 L60 240 L100 260 L160 200 L220 250 L280 210 L340 260 L400 220 L460 250 L520 190 L580 240 L640 210 L700 250 L760 200 L820 240 L880 220 L940 250 L1000 200 L1060 240 L1120 210 L1180 250 L1240 220 L1300 250 L1360 200 L1420 240 L1440 220 L1440 400 Z"
-          fill="#0a160a"
-        />
-      </svg>
-
-      {/* Mid treeline */}
-      <svg
-        className="absolute bottom-0 left-0 w-full opacity-30"
-        style={{ height: '32%', transform: 'translateY(calc(var(--scroll) * 0.12px))' }}
-        viewBox="0 0 1440 300"
-        preserveAspectRatio="none"
-        fill="none"
-      >
-        <path
-          d="M0 300 L0 180 L40 140 L80 170 L130 120 L170 160 L210 130 L260 170 L300 140 L350 160 L390 110 L440 150 L490 130 L540 170 L580 140 L630 160 L680 120 L730 150 L780 130 L830 170 L880 140 L930 160 L980 120 L1030 150 L1080 130 L1130 170 L1180 140 L1230 160 L1280 120 L1330 150 L1380 130 L1440 170 L1440 300 Z"
-          fill="#142613"
-        />
-      </svg>
-
-      {/* Near treeline — darkest */}
-      <svg
-        className="absolute bottom-0 left-0 w-full opacity-50"
-        style={{ height: '22%', transform: 'translateY(calc(var(--scroll) * 0.2px))' }}
-        viewBox="0 0 1440 220"
-        preserveAspectRatio="none"
-        fill="none"
-      >
-        <path
-          d="M0 220 L0 120 L30 80 L60 100 L100 60 L140 90 L180 70 L220 100 L260 80 L300 60 L340 90 L380 70 L420 100 L460 80 L500 60 L540 90 L580 70 L620 100 L660 80 L700 60 L740 90 L780 70 L820 100 L860 80 L900 60 L940 90 L980 70 L1020 100 L1060 80 L1100 60 L1140 90 L1180 70 L1220 100 L1260 80 L1300 60 L1340 90 L1380 70 L1420 100 L1440 80 L1440 220 Z"
-          fill="#0a160a"
-        />
-      </svg>
-
-      {/* River shimmer at bottom */}
-      {!admin && (
-        <div
-          className="absolute bottom-0 left-0 w-full opacity-25"
-          style={{ height: '18%' }}
-        >
-          <div
-            className="absolute inset-0 animate-shimmer"
-            style={{
-              background:
-                'linear-gradient(90deg, transparent 0%, rgba(79,161,189,0.15) 20%, rgba(133,192,212,0.2) 50%, rgba(79,161,189,0.15) 80%, transparent 100%)',
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-50"
-            style={{
-              background:
-                'repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(214,234,241,0.06) 40px, rgba(214,234,241,0.06) 42px)',
-            }}
-          />
-        </div>
-      )}
-
-      {/* Fog layers */}
-      <div
-        className="absolute bottom-0 left-0 w-[140%] h-1/3 opacity-25 animate-fog"
-        style={{
-          background:
-            'radial-gradient(ellipse at 30% 100%, rgba(250,244,232,0.08) 0%, transparent 60%)',
-        }}
-      />
-      <div
-        className="absolute bottom-0 right-0 w-[120%] h-1/4 opacity-20 animate-fog"
-        style={{
-          animationDelay: '-12s',
-          background:
-            'radial-gradient(ellipse at 70% 100%, rgba(250,244,232,0.06) 0%, transparent 50%)',
-        }}
-      />
-
-      {/* Floating particles / fireflies */}
-      <div className="absolute inset-0">
-        {PARTICLES.map((p, i) => (
-          <span
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-              width: `${p.size}px`,
-              height: `${p.size}px`,
-              background: p.gold ? 'rgba(212,168,67,0.7)' : 'rgba(214,234,241,0.5)',
-              boxShadow: p.gold
-                ? '0 0 8px rgba(212,168,67,0.5)'
-                : '0 0 6px rgba(214,234,241,0.3)',
-              animation: `floatSlow ${p.dur}s ease-in-out infinite`,
-              animationDelay: `${p.delay}s`,
-              opacity: 0.6,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Vignette */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(ellipse at center, transparent 40%, rgba(10,22,10,0.5) 100%)',
-        }}
-      />
-    </div>
+    />
   );
 }
-
-const PARTICLES = Array.from({ length: 28 }, (_, i) => ({
-  x: (i * 37) % 100,
-  y: (i * 53) % 90,
-  size: 2 + ((i * 7) % 4),
-  dur: 6 + ((i * 3) % 8),
-  delay: -(i * 0.7),
-  gold: i % 3 === 0,
-}));
