@@ -146,20 +146,16 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
             final showcase beneath the canopy.
           </p>
 
-          {/* Animated river scene with story overlay */}
-          <div className="mt-8 relative rounded-2xl overflow-hidden border border-forest-700/40">
-            <ForestScene variant="river" />
-            <div className="absolute inset-0 flex items-center">
-              <div className="max-w-md ml-8 md:ml-16 p-6">
-                <p className="font-display text-2xl md:text-3xl font-semibold text-cream-50 leading-tight text-shadow-forest">
-                  The river carries you forward.
-                </p>
-                <p className="mt-3 font-body text-cream-100/80 leading-relaxed">
-                  From the moment you apply, you're following a current — one that leads
-                  through workshops, mentorship, and 36 hours of building toward something
-                  you've never made before.
-                </p>
-              </div>
+                    <div className="absolute inset-0 flex items-start pt-12">
+            <div className="max-w-md ml-8 md:ml-16 p-6">
+              <p className="font-display text-2xl md:text-3xl font-semibold text-cream-50 leading-tight text-shadow-forest">
+                The river carries you forward.
+              </p>
+              <p className="mt-3 font-body text-cream-100/80 leading-relaxed">
+                From the moment you apply, you're following a current — one that leads
+                through workshops, mentorship, and 36 hours of building toward something
+                you've never made before.
+              </p>
             </div>
           </div>
 
