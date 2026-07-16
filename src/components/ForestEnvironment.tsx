@@ -360,3 +360,11 @@ export function WaterfallScene() {
     />
   );
 }
+
+interface ForestEnvironmentProps {
+  variant?: 'applicant' | 'admin';
+}
+
+export function ForestEnvironment({ variant: _variant }: ForestEnvironmentProps) {
+  return <WaterfallScene />;
+}
