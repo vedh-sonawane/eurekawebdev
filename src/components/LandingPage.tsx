@@ -66,15 +66,22 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
        <div className="max-w-5xl mx-auto text-center">
   <div className="inline-block mb-8 animate-fade-in">
     <span
-      className="font-sans text-xs tracking-wide text-forest-950 px-3 py-1"
+      className="font-sans text-xs tracking-wide px-4 py-2"
       style={{
-        background: 'linear-gradient(104deg, transparent 0%, #86a36a 2%, #a8bf90 6%, #86a36a 95%, transparent 98%)',
-        borderRadius: '2px',
-        boxShadow: '2px 2px 0px rgba(107,138,79,0.15), -1px -1px 0px rgba(107,138,79,0.1)',
-        WebkitBoxDecorationBreak: 'clone',
+        background: 'linear-gradient(180deg, #8B5E3C 0%, #6B4423 30%, #7a5333 50%, #5C3A1E 51%, #6B4423 70%, #7a5333 100%)',
+        borderRadius: '4px',
+        border: '1px solid #4a2e10',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.3), 2px 3px 8px rgba(0,0,0,0.4), -1px -1px 4px rgba(0,0,0,0.2)',
+        color: '#faf4e8',
+        display: 'inline-block',
+        backgroundImage: `
+          linear-gradient(180deg, #8B5E3C 0%, #6B4423 30%, #7a5333 50%, #5C3A1E 51%, #6B4423 70%, #7a5333 100%),
+          repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px),
+          repeating-linear-gradient(180deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 8px)
+        `,
+        textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+        letterSpacing: '0.08em',
         position: 'relative',
-        display: 'inline',
-        lineHeight: '1.8',
       }}
     >
       Applications open · Closes August 15 at 11:59 PM PT
