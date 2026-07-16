@@ -148,7 +148,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
             Every great discovery starts with a single step into the unknown
           </h2>
           <p className="mt-6 font-body text-lg text-cream-100/70 max-w-2xl leading-relaxed">
-            EurekaHACKS isn't just a hackathon — it's an expedition. We've designed every stage
+            EurekaHACKS isn't just a normal hackathon you would apply to feeling "oh a hackathon. okay..." It's an expedition. We've designed every stage
             to feel like a journey through the wilderness, from your first application to the
             final showcase beneath the canopy.
           </p>
@@ -162,7 +162,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
                   The river carries you forward.
                 </p>
                 <p className="mt-3 font-body text-cream-100/80 leading-relaxed">
-                  From the moment you apply, you're following a current — one that leads
+                  From the moment you apply, you're following a current: one that leads
                   through workshops, mentorship, and 36 hours of building toward something
                   you've never made before.
                 </p>
@@ -204,7 +204,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
                 </p>
                 <p className="mt-3 font-body text-cream-100/80 leading-relaxed">
                   We believe the best ideas emerge when you step outside your comfort zone.
-                  EurekaHACKS is designed to lower barriers and raise ambitions — whether
+                  EurekaHACKS is designed to lower barriers and raise ambitions; whether
                   it's your first hackathon or your fifteenth.
                 </p>
               </div>
@@ -222,7 +222,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
               {[
                 { icon: Tent, text: 'Travel reimbursements and lodging for explorers coming from afar' },
                 { icon: Code2, text: 'A hardware lab stocked with microcontrollers, sensors, and trail gear' },
-                { icon: Zap, text: 'Workshops led by industry trailblazers — from AI to embedded systems' },
+                { icon: Zap, text: 'Workshops led by industry trailblazers, from AI, to embedded systems' },
                 { icon: TreePine, text: 'Quiet forest zones for deep work, loud clearings for collaboration' },
               ].map((item) => (
                 <div key={item.text} className="flex items-start gap-4 py-5">
@@ -322,7 +322,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
           </h2>
           <p className="mt-6 font-body text-lg text-cream-100/70 max-w-2xl leading-relaxed">
             Every year, explorers bring bold ideas to life. Here are a few projects from past
-            EurekaHACKS expeditions — and the stories behind them.
+            EurekaHACKS expeditions, and the stories behind them.
           </p>
 
           <div className="mt-16 grid md:grid-cols-2 gap-8">
@@ -367,7 +367,7 @@ export function LandingPage({ onApply, onAdminAccess }: LandingPageProps) {
                 </p>
                 <p className="mt-3 font-body text-cream-100/80 leading-relaxed">
                   36 hours. One forest. A community waiting to see what you'll build.
-                  The trail is waiting — are you ready?
+                  The trail is waiting: are you ready?
                 </p>
               </div>
             </div>
@@ -448,10 +448,10 @@ function SectionLabel({ icon: Icon, text }: { icon: React.ElementType; text: str
 
 const FAQS = [
   { q: 'What is EurekaHACKS?', a: 'EurekaHACKS is a 36-hour hackathon where 500+ students of all skill levels come together to experiment, build, and create unique software or hardware projects from scratch. We provide mentors, workshops, sponsors, hardware, and a forest full of inspiration.' },
-  { q: 'Who can participate?', a: 'Any student or recent graduate (within 12 months of graduation) is welcome. Whether it\'s your first hackathon or your tenth — we\'ve had everyone from first-time coders to seasoned builders ship incredible projects.' },
+  { q: 'Who can participate?', a: 'Any student or recent graduate (within 12 months of graduation) is welcome. Whether it\'s your first hackathon or your tenth. We\'ve had everyone from first-time coders to seasoned builders ship incredible projects.' },
   { q: 'How much does it cost?', a: 'Nothing. EurekaHACKS is completely free to attend. We cover meals, lodging, and provide travel reimbursements so you can focus on building.' },
   { q: 'What if I\'ve never been to a hackathon?', a: 'Perfect. Most of our explorers are first-timers. We have beginner-friendly workshops, a team-matching session, and mentors who love helping people ship their first project.' },
-  { q: 'How many people can be on a team?', a: 'Teams of up to 4. You can team up with anyone — any school, any country, any experience level. Teams can be formed before or during the event.' },
+  { q: 'How many people can be on a team?', a: 'Teams of up to 4. You can team up with anyone, literally. Any school, any country, any experience level. Teams can be formed before or during the event.' },
   { q: 'When do applications close?', a: 'Applications close August 15 at 11:59 PM PT. We review on a rolling basis, so applying early improves your chances.' },
 ];
 
